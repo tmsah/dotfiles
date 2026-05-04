@@ -1,13 +1,40 @@
 {
-  "editor.codeLens": false,
-  "editor.copyWithSyntaxHighlighting": false,
-  "editor.guides.bracketPairs": true,
-  "explorer.confirmDelete": false,
-  "explorer.confirmDragAndDrop": false
-  "files.insertFinalNewline": true,
-  "files.trimTrailingWhitespace": true,
+  // ---- VSCode 組み込み設定 ----
+  "diffEditor.ignoreTrimWhitespace": false,                 // diffエディタで末尾の空白を無視しない
+
+  "editor.codeLens": false,                                 // Code Lensを無効化
+  "editor.copyWithSyntaxHighlighting": false,               // コピー時にシンタックスハイライトを含めない
+  "editor.defaultFormatter": "esbenp.prettier-vscode",      // デフォルトのフォーマッター
+  "editor.detectIndentation": false,                        // インデントの自動検出を無効化
+  "editor.formatOnSave": true,                              // 保存時に自動フォーマット
+  "editor.formatOnType": true,                              // 入力時に自動フォーマット
+  "editor.guides.bracketPairs": true,                       // 対応する括弧のガイド線を表示
+  "editor.suggestSelection": "first",                       // サジェストの選択を最初の候補に
+
+  "explorer.confirmDelete": false,                          // ファイル削除時の確認ダイアログを非表示
+  "explorer.confirmDragAndDrop": false,                     // ドラッグ&ドロップ時の確認ダイアログを非表示
+
+  "files.insertFinalNewline": true,                         // ファイル末尾に改行を挿入
+  "files.trimTrailingWhitespace": true,                     // 保存時に末尾の空白を削除
+
+  "update.showReleaseNotes": false,                         // アップデート後のリリースノート表示を無効化
   "workbench.colorCustomizations": {
-    "editor.lineHighlightBackground": "#333333",
-    "editorCursor.foreground": "#00ff00",
+    "editor.lineHighlightBackground": "#333333",          // 現在行の背景色
+    "editorCursor.foreground": "#00ff00"                  // カーソルの色
   },
+
+  // ---- 拡張機能設定 ----
+  "claudeCode.preferredLocation": "panel",                  // Claude Codeパネルの表示位置
+  "gitlens.codeLens.enabled": false,                        // GitLensのCode Lensを無効化
+
+  // ---- フォーマッター設定 ----
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter", // PythonのフォーマッターにBlackを使用
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format", // シェルスクリプトのフォーマッター
+  },
+  "[swift]": {
+    "editor.defaultFormatter": "sweetpad.sweetpad",         // SwiftのフォーマッターにSweetPadを使用
+  }
 }
