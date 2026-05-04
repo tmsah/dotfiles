@@ -4,6 +4,7 @@
 
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 HOME_DIR="$REPO_DIR/home"
+BACKUP_DIR="$REPO_DIR/backup/$(date +%Y%m%d_%H%M%S)"
 
 # OS・環境判定
 OS="$(uname -s)"
@@ -34,10 +35,25 @@ pkg_install() {
   esac
 }
 
+# 既存ファイルをバックアップ
+_backup() {
+  local file="$1"
+  if [[ -e "$file" || -L "$file" ]]; then
+    mkdir -p "$BACKUP_DIR"
+    mv "$file" "$BACKUP_DIR/$(basename "$file")"
+    echo "  バックアップ: $BACKUP_DIR/$(basename "$file")"
+  fi
+}
+
 # シンボリックリンク作成ヘルパー (home/ 以下のパスを受け取る)
 link() {
   local src="$HOME_DIR/$1" dst="$2"
   mkdir -p "$(dirname "$dst")"
+  # すでに正しいシンボリックリンクならスキップ
+  if [[ "$(readlink "$dst" 2>/dev/null)" == "$src" ]]; then
+    echo "✓ $dst"; return
+  fi
+  _backup "$dst"
   ln -sfn "$src" "$dst" && echo "✓ $dst" || echo "✗ $dst (失敗)"
 }
 
@@ -45,6 +61,11 @@ link() {
 copy_file() {
   local src="$HOME_DIR/$1" dst="$2"
   mkdir -p "$(dirname "$dst")"
+  # 内容が同じならスキップ
+  if cmp -s "$src" "$dst" 2>/dev/null; then
+    echo "✓ $dst"; return
+  fi
+  _backup "$dst"
   cp "$src" "$dst" && echo "✓ $dst" || echo "✗ $dst (失敗)"
 }
 
