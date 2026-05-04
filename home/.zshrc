@@ -154,3 +154,27 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
 # 追加の設定ファイルを実行
 . "$HOME/.local/bin/env"
+
+# dotfiles の自動更新 (バックグラウンド実行、起動速度に影響しない)
+_dotfiles_update() {
+  local dir="$HOME/dotfiles"
+  [[ -d "$dir/.git" ]] || return
+  local before
+  before=$(git -C "$dir" rev-parse HEAD 2>/dev/null)
+  if git -C "$dir" pull --quiet --ff-only 2>/dev/null; then
+    local after
+    after=$(git -C "$dir" rev-parse HEAD 2>/dev/null)
+    if [[ "$before" != "$after" ]]; then
+      echo "dotfiles: 更新しました ✓"
+    else
+      echo "dotfiles: 最新です ✓"
+    fi
+  else
+    echo "dotfiles: pull 失敗 (オフラインまたはコンフリクトの可能性があります)"
+  fi
+}
+_dotfiles_update &!
+
+# dotfiles の自動更新 (バックグラウンド実行、起動速度に影響しない)
+# --ff-only: ローカルに変更があっても失敗するだけでマージしない
+(git -C "$HOME/dotfiles" pull --quiet --ff-only 2>/dev/null) &!
