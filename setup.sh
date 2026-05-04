@@ -41,6 +41,13 @@ link() {
   ln -sfn "$src" "$dst" && echo "✓ $dst" || echo "✗ $dst (失敗)"
 }
 
+# ファイルコピーヘルパー (plistなどシンボリックリンク不可のファイル用)
+copy_file() {
+  local src="$HOME_DIR/$1" dst="$2"
+  mkdir -p "$(dirname "$dst")"
+  cp "$src" "$dst" && echo "✓ $dst" || echo "✗ $dst (失敗)"
+}
+
 echo "=== セットアップ開始: $REPO_DIR ==="
 
 # --- zsh インストール ---
@@ -106,12 +113,27 @@ fi
 link .vscode/settings.json    "$VSCODE_USER_DIR/settings.json"
 link .vscode/keybindings.json "$VSCODE_USER_DIR/keybindings.json"
 
-# --- LaunchAgents (macOS のみ) ---
+# --- macOS 専用設定 ---
 if [[ "$OS" == "Darwin" ]]; then
+  # LaunchAgents
   echo -e "\n[LaunchAgents]"
   link Library/LaunchAgents/com.user.ssh-add.plist \
        "$HOME/Library/LaunchAgents/com.user.ssh-add.plist"
-  echo "  ※ 有効化: launchctl load ~/Library/LaunchAgents/com.user.ssh-add.plist"
+  PLIST_LABEL="com.user.ssh-add"
+  if launchctl list | grep -q "$PLIST_LABEL" 2>/dev/null; then
+    echo "✓ $PLIST_LABEL (読み込み済み)"
+  else
+    launchctl load "$HOME/Library/LaunchAgents/$PLIST_LABEL.plist" \
+      && echo "✓ $PLIST_LABEL (読み込み完了)" \
+      || echo "✗ $PLIST_LABEL (読み込み失敗)"
+  fi
+
+  # iTerm2 設定
+  echo -e "\n[iTerm2]"
+  ITERM2_PLIST="$HOME/Library/Preferences/com.googlecode.iterm2.plist"
+  copy_file Library/Preferences/com.googlecode.iterm2.plist "$ITERM2_PLIST"
+  # 設定をすぐ反映させるためにキャッシュをリセット
+  killall cfprefsd 2>/dev/null || true
 fi
 
 # --- oh-my-zsh プラグイン ---
@@ -126,6 +148,18 @@ for repo in "zsh-users/zsh-syntax-highlighting" "zsh-users/zsh-completions"; do
     echo "✓ $name (インストール済み)"
   fi
 done
+
+# --- completion ディレクトリのパーミッション修正 ---
+echo -e "\n[completion パーミッション]"
+if command -v compaudit &>/dev/null; then
+  local_insecure=$(compaudit 2>/dev/null)
+  if [[ -n "$local_insecure" ]]; then
+    echo "$local_insecure" | xargs chmod g-w,o-w
+    echo "✓ パーミッション修正完了"
+  else
+    echo "✓ 問題なし"
+  fi
+fi
 
 echo -e "\n=== セットアップ完了 ==="
 echo "  ※ シェルを再起動して設定を反映してください: exec zsh"

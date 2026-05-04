@@ -1,46 +1,62 @@
-# setting_scripts
-色んな設定ファイル保存用．  
-使うときはgit cloneなりコピペなり．
+# dotfiles
 
-## oh-my-zsh
-### インストール
-[ここ](https://qiita.com/iwaseasahi/items/a2b00b65ebd06785b443)を参考にインストール。
+個人の環境設定ファイル管理リポジトリ。  
+`setup.sh` を実行するだけで全設定がシンボリックリンクで配置される。
 
-### LaunchAgentsの設定
-macでログイン時に自動でコマンドを実行する仕組み。  
-`~/Library/LaunchAgents` 以下に `Library/LaunchAgents` 以下の `plist` ファイルを配置。  
-その後コマンド実行。  
+## 構成
+
 ```
-$ launchctrl load hoge.plist
-```
-これで次回ログイン時から `plist` に記述したコマンドが自動実行される。  
-(自動実行をやめる時は `unload` してファイルを削除。)
-
-### `.zshrc` の設定
-`~/.zshrc` にこのリポジトリの `.zshrc` を上書きする。
-
-### カスタムテーマの設定
-`~/.oh-my-zsh/custom/themes` にこのリポジトリの `.oh-my-zsh/custom/themes/main.zsh-theme` を配置する。
-
-### プラグインのインストール
-以下のコマンドを実行。
-```
-$ cd ~/.oh-my-zsh/custom/plugins
-$ git clone git@github.com:zsh-users/zsh-syntax-highlighting.git
-$ git clone git@github.com:zsh-users/zsh-completions.git
+dotfiles/
+├── setup.sh   # セットアップスクリプト
+└── home/      # ~/に配置されるファイル群
+    ├── .zshrc
+    ├── .gitconfig
+    ├── .vimrc
+    ├── .claude/
+    ├── .vscode/
+    ├── .oh-my-zsh/
+    └── Library/
+        ├── LaunchAgents/
+        └── Preferences/   # iTerm2設定など
 ```
 
-### その他
-ターミナル起動のたびに`Insecure completion-dependent directories detected:`の警告が出る場合は以下を実行。
-```
-compaudit | xargs chmod g-w,o-w
+## セットアップ
+
+```bash
+git clone git@github.com:tmsah/dotfiles.git ~/dotfiles
+~/dotfiles/setup.sh
 ```
 
-## iTerm2の設定
-上から降りて来るのは[これ](https://qiita.com/okamu_/items/a5086d2d5ba405f35acb)を参照。
+以下が自動で行われる。
 
-## VSCodeの設定ファイル
-配置場所
-- Windows: `C:\Users\(ユーザー名)\AppData\Roaming\Code\User`
-- Mac: `$HOME/Library/Application Support/Code/User`
-- Linux: `$HOME/.config/Code/User`
+- zsh / vim / oh-my-zsh のインストール（未インストールの場合）
+- oh-my-zsh プラグイン（zsh-syntax-highlighting, zsh-completions）のインストール
+- `home/` 以下の設定ファイルを対応するパスにシンボリックリンクで配置
+- デフォルトシェルを zsh に変更
+- LaunchAgents の読み込み（macOS）
+- iTerm2 設定の復元（macOS）
+- completion ディレクトリのパーミッション修正
+
+何度実行しても安全。調子が悪い時も再実行でOK。
+
+## 日常の使い方
+
+ターミナルを開くたびに自動で `git pull` が走るため、基本的に何もしなくてよい。
+
+```
+dotfiles: 最新です ✓          # 更新なし
+dotfiles: 更新しました ✓      # 新しい設定が反映された
+dotfiles: pull 失敗 (...)     # オフライン時など
+```
+
+設定を変更した場合は編集・コミット・プッシュすれば他の環境に反映される。
+
+### iTerm2 設定を更新する場合
+
+iTerm2 の設定はシンボリックリンクではなくコピーで管理しているため、  
+GUI で設定を変更した後に手動でリポジトリへ反映する必要がある。
+
+```bash
+cp ~/Library/Preferences/com.googlecode.iterm2.plist \
+   ~/dotfiles/home/Library/Preferences/com.googlecode.iterm2.plist
+```
