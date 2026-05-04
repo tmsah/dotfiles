@@ -7,8 +7,9 @@
 
 ```
 dotfiles/
-├── setup.sh   # セットアップスクリプト
-└── home/      # ~/に配置されるファイル群
+├── setup.sh        # セットアップスクリプト
+├── backup/         # 既存ファイルのバックアップ（git管理外）
+└── home/           # ~/に配置されるファイル群
     ├── .zshrc
     ├── .gitconfig
     ├── .vimrc
@@ -22,8 +23,29 @@ dotfiles/
 
 ## セットアップ
 
+### 1. clone
+
 ```bash
 git clone git@github.com:tmsah/dotfiles.git ~/dotfiles
+```
+
+### 2. .gitconfig を編集
+
+`home/.gitconfig` の以下の項目を自分の情報に書き換える。
+
+```bash
+vim ~/dotfiles/home/.gitconfig
+```
+
+```ini
+[user]
+    name = your-name       # ← 変更
+    email = your@mail.com  # ← 変更
+```
+
+### 3. setup.sh を実行
+
+```bash
 ~/dotfiles/setup.sh
 ```
 
@@ -38,6 +60,9 @@ git clone git@github.com:tmsah/dotfiles.git ~/dotfiles
 - completion ディレクトリのパーミッション修正
 
 何度実行しても安全。調子が悪い時も再実行でOK。
+
+**既存ファイルがある場合**は上書き前に `backup/<timestamp>/` へ自動バックアップされる。  
+すでに正しく配置済みのファイルはスキップされる。
 
 ## 日常の使い方
 
