@@ -10,6 +10,30 @@ OS="$(uname -s)"
 IS_WSL=false
 grep -qi microsoft /proc/version 2>/dev/null && IS_WSL=true
 
+# パッケージマネージャ判定
+if [[ "$OS" == "Darwin" ]]; then
+  PKG_MGR="brew"
+elif command -v apt-get &>/dev/null; then
+  PKG_MGR="apt"
+elif command -v dnf &>/dev/null; then
+  PKG_MGR="dnf"
+elif command -v yum &>/dev/null; then
+  PKG_MGR="yum"
+else
+  PKG_MGR="unknown"
+fi
+
+# パッケージインストールヘルパー
+pkg_install() {
+  case "$PKG_MGR" in
+    brew) brew install "$1" ;;
+    apt)  sudo apt-get install -y "$1" ;;
+    dnf)  sudo dnf install -y "$1" ;;
+    yum)  sudo yum install -y "$1" ;;
+    *)    echo "! パッケージマネージャが見つかりません。手動でインストールしてください: $1"; return 1 ;;
+  esac
+}
+
 # シンボリックリンク作成ヘルパー (home/ 以下のパスを受け取る)
 link() {
   local src="$HOME_DIR/$1" dst="$2"
@@ -18,6 +42,37 @@ link() {
 }
 
 echo "=== セットアップ開始: $REPO_DIR ==="
+
+# --- zsh インストール ---
+echo -e "\n[zsh]"
+if ! command -v zsh &>/dev/null; then
+  pkg_install zsh
+else
+  echo "✓ zsh (インストール済み)"
+fi
+if [[ "$(basename "$SHELL")" != "zsh" ]]; then
+  echo "デフォルトシェルをzshに変更します"
+  chsh -s "$(which zsh)"
+fi
+
+# --- vim インストール ---
+echo -e "\n[vim]"
+if ! command -v vim &>/dev/null; then
+  pkg_install vim
+else
+  echo "✓ vim (インストール済み)"
+fi
+
+# --- oh-my-zsh インストール ---
+# RUNZSH=no: インストール後にzshを起動しない
+# CHSH=no: デフォルトシェル変更は上記で行うためスキップ
+echo -e "\n[oh-my-zsh]"
+if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+  echo "インストール中..."
+  RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+else
+  echo "✓ oh-my-zsh (インストール済み)"
+fi
 
 # --- dotfiles ---
 echo -e "\n[dotfiles]"
@@ -30,12 +85,8 @@ link .vimrc            "$HOME/.vimrc"
 
 # --- oh-my-zsh テーマ ---
 echo -e "\n[oh-my-zsh テーマ]"
-if [[ -d "$HOME/.oh-my-zsh" ]]; then
-  link .oh-my-zsh/custom/themes/main.zsh-theme \
-       "$HOME/.oh-my-zsh/custom/themes/main.zsh-theme"
-else
-  echo "! oh-my-zsh 未インストール。スキップ。"
-fi
+link .oh-my-zsh/custom/themes/main.zsh-theme \
+     "$HOME/.oh-my-zsh/custom/themes/main.zsh-theme"
 
 # --- Claude 設定 ---
 echo -e "\n[Claude]"
@@ -65,19 +116,16 @@ fi
 
 # --- oh-my-zsh プラグイン ---
 echo -e "\n[oh-my-zsh プラグイン]"
-if [[ -d "$HOME/.oh-my-zsh" ]]; then
-  PLUGIN_DIR="$HOME/.oh-my-zsh/custom/plugins"
-  for repo in "zsh-users/zsh-syntax-highlighting" "zsh-users/zsh-completions"; do
-    name="${repo##*/}"
-    if [[ ! -d "$PLUGIN_DIR/$name" ]]; then
-      echo "インストール中: $name"
-      git clone "https://github.com/$repo.git" "$PLUGIN_DIR/$name"
-    else
-      echo "✓ $name (インストール済み)"
-    fi
-  done
-else
-  echo "! oh-my-zsh 未インストール。スキップ。"
-fi
+PLUGIN_DIR="$HOME/.oh-my-zsh/custom/plugins"
+for repo in "zsh-users/zsh-syntax-highlighting" "zsh-users/zsh-completions"; do
+  name="${repo##*/}"
+  if [[ ! -d "$PLUGIN_DIR/$name" ]]; then
+    echo "インストール中: $name"
+    git clone "https://github.com/$repo.git" "$PLUGIN_DIR/$name"
+  else
+    echo "✓ $name (インストール済み)"
+  fi
+done
 
 echo -e "\n=== セットアップ完了 ==="
+echo "  ※ シェルを再起動して設定を反映してください: exec zsh"
