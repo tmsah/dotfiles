@@ -7,9 +7,14 @@
 
 ```
 dotfiles/
-├── setup.sh        # セットアップスクリプト
-├── backup/         # 既存ファイルのバックアップ（git管理外）
-└── home/           # ~/に配置されるファイル群
+├── setup.sh              # エントリポイント
+├── scripts/
+│   ├── lib.sh            # 共通変数・ヘルパー関数
+│   ├── install.sh        # ツール類のインストール
+│   ├── link.sh           # dotfiles配置（symlink/source_file）
+│   └── macos.sh          # macOS専用（nodebrew・LaunchAgents・iTerm2）
+├── backup/               # 既存ファイルのバックアップ（git管理外）
+└── home/                 # ~/に配置されるファイル群
     ├── .zshrc
     ├── .gitconfig
     ├── .vimrc
@@ -18,7 +23,7 @@ dotfiles/
     ├── .oh-my-zsh/
     └── Library/
         ├── LaunchAgents/
-        └── Preferences/   # iTerm2設定など
+        └── Preferences/  # iTerm2設定など
 ```
 
 ## セットアップ
