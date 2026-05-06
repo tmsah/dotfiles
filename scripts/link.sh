@@ -5,6 +5,7 @@ echo -e "\n[dotfiles]"
 source_file .zshrc        "$HOME/.zshrc"
 source_file .bash_profile "$HOME/.bash_profile"
 source_file .bashrc       "$HOME/.bashrc"
+link .gitconfig        "$HOME/.gitconfig"
 link .gitignore_global "$HOME/.gitignore_global"
 link .vimrc            "$HOME/.vimrc"
 

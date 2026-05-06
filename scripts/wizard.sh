@@ -1,33 +1,31 @@
-# 個人情報の入力ウィザード（テンプレートから実ファイルを生成）
+# 個人情報の入力ウィザード（home/.local/ 以下にローカル設定を生成）
 # lib.sh を source 済みの環境で実行すること
+
+LOCAL_DIR="$REPO_DIR/home/.local"
+mkdir -p "$LOCAL_DIR"
 
 echo -e "\n=== 個人設定ウィザード ==="
 
-# --- git 設定 ---
-GIT_CONFIG="$HOME/.gitconfig"
-if [[ -f "$GIT_CONFIG" ]]; then
-  echo "✓ ~/.gitconfig (既存ファイルあり・スキップ)"
+# --- git 設定（home/.local/gitconfig）---
+if [[ -f "$LOCAL_DIR/gitconfig" ]]; then
+  echo "✓ home/.local/gitconfig (既存ファイルあり・スキップ)"
 else
   echo -e "\n[git 設定]"
   read -rp "  user.name  : " git_name
   read -rp "  user.email : " git_email
-  sed -e "s/{{GIT_NAME}}/$git_name/" \
-      -e "s/{{GIT_EMAIL}}/$git_email/" \
-      "$REPO_DIR/home/.gitconfig.template" > "$GIT_CONFIG"
-  echo "✓ ~/.gitconfig を生成しました"
+  printf '[user]\n    name = %s\n    email = %s\n' "$git_name" "$git_email" \
+    > "$LOCAL_DIR/gitconfig"
+  echo "✓ home/.local/gitconfig を生成しました"
 fi
 
-# --- SSH キー設定（macOS のみ）---
+# --- SSH キー設定（home/.local/ssh_key・macOS のみ）---
 if [[ "$OS" == "Darwin" ]]; then
-  SSH_PLIST="$HOME/Library/LaunchAgents/com.user.ssh-add.plist"
-  mkdir -p "$(dirname "$SSH_PLIST")"
-  if [[ -f "$SSH_PLIST" ]]; then
-    echo "✓ ~/Library/LaunchAgents/com.user.ssh-add.plist (既存ファイルあり・スキップ)"
+  if [[ -f "$LOCAL_DIR/ssh_key" ]]; then
+    echo "✓ home/.local/ssh_key (既存ファイルあり・スキップ)"
   else
     echo -e "\n[SSH キー設定]"
     read -rp "  SSH キーのパス (例: $HOME/.ssh/id_rsa): " ssh_key_path
-    sed "s|{{SSH_KEY_PATH}}|$ssh_key_path|" \
-        "$REPO_DIR/home/Library/LaunchAgents/com.user.ssh-add.plist.template" > "$SSH_PLIST"
-    echo "✓ ~/Library/LaunchAgents/com.user.ssh-add.plist を生成しました"
+    printf '%s\n' "$ssh_key_path" > "$LOCAL_DIR/ssh_key"
+    echo "✓ home/.local/ssh_key を生成しました"
   fi
 fi

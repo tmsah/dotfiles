@@ -6,8 +6,9 @@
         <string>com.user.ssh-add</string>
         <key>ProgramArguments</key>
         <array>
-            <string>/usr/bin/ssh-add</string>
-            <string>{{SSH_KEY_PATH}}</string>
+            <string>/bin/sh</string>
+            <string>-c</string>
+            <string>/usr/bin/ssh-add "$(/bin/cat "$HOME/dotfiles/home/.local/ssh_key" 2>/dev/null)"</string>
         </array>
         <key>RunAtLoad</key>
         <true/>

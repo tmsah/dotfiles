@@ -1,6 +1,5 @@
-[user]
-    name = {{GIT_NAME}}
-    email = {{GIT_EMAIL}}
+[include]
+    path = .local/gitconfig
 [core]
     editor = vim
     excludesfile = ~/.gitignore_global
