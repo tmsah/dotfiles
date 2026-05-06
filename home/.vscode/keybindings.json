@@ -6,5 +6,13 @@
     {
         "key": "cmd+shift+n",
         "command": "explorer.newFolder"
+    },
+    {
+        "key": "shift+enter",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": {
+            "text": "\\\r\n"
+        },
+        "when": "terminalFocus"
     }
 ]

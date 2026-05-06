@@ -29,9 +29,12 @@ dotfiles/
 git clone git@github.com:tmsah/dotfiles.git ~/dotfiles
 ```
 
-### 2. .gitconfig を編集
+### 2. 個人情報を含むファイルを編集
 
-`home/.gitconfig` の以下の項目を自分の情報に書き換える。
+以下のファイルは個人情報を含むため、リポジトリ管理外（コミット不要）。  
+クローン後に自分の情報を書き換えること。
+
+**`home/.gitconfig`**
 
 ```bash
 vim ~/dotfiles/home/.gitconfig
@@ -43,6 +46,16 @@ vim ~/dotfiles/home/.gitconfig
     email = your@mail.com  # ← 変更
 ```
 
+**`home/Library/LaunchAgents/com.user.ssh-add.plist`**（macOS）
+
+```bash
+vim ~/dotfiles/home/Library/LaunchAgents/com.user.ssh-add.plist
+```
+
+```xml
+<string>/Users/your-username/.ssh/your-key.pem</string>  <!-- ← 変更 -->
+```
+
 ### 3. setup.sh を実行
 
 ```bash
@@ -52,6 +65,8 @@ vim ~/dotfiles/home/.gitconfig
 以下が自動で行われる。
 
 - zsh / vim / oh-my-zsh のインストール（未インストールの場合）
+- direnv / pyenv のインストール
+- nodebrew のインストール（macOS のみ）
 - oh-my-zsh プラグイン（zsh-syntax-highlighting, zsh-completions）のインストール
 - `home/` 以下の設定ファイルを対応するパスに配置（後述）
 - デフォルトシェルを zsh に変更

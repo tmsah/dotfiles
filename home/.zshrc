@@ -149,6 +149,15 @@ setopt hist_reduce_blanks
 # 補完で小文字でも大文字にマッチさせる
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
+# nodebrew（Node.jsバージョン管理）
+[[ -d "$HOME/.nodebrew" ]] && export PATH=$HOME/.nodebrew/current/bin:$PATH
+
+# pyenv（Pythonバージョン管理）
+command -v pyenv &>/dev/null && eval "$(pyenv init -)"
+
+# direnv設定（ディレクトリごとの環境変数管理）
+eval "$(direnv hook zsh)"
+
 # dotfiles の自動更新（3秒タイムアウト、同期実行でプロンプト前に結果を表示）
 _dotfiles_update() {
   setopt LOCAL_OPTIONS NO_MONITOR  # バックグラウンドジョブのプロセスログを抑制

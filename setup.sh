@@ -105,6 +105,33 @@ else
   echo "✓ vim (インストール済み)"
 fi
 
+# --- direnv インストール ---
+echo -e "\n[direnv]"
+if ! command -v direnv &>/dev/null; then
+  pkg_install direnv
+else
+  echo "✓ direnv (インストール済み)"
+fi
+
+# --- nodebrew インストール（macOS のみ）---
+if [[ "$OS" == "Darwin" ]]; then
+  echo -e "\n[nodebrew]"
+  if ! command -v nodebrew &>/dev/null; then
+    brew install nodebrew
+    nodebrew setup
+  else
+    echo "✓ nodebrew (インストール済み)"
+  fi
+fi
+
+# --- pyenv インストール ---
+echo -e "\n[pyenv]"
+if ! command -v pyenv &>/dev/null; then
+  pkg_install pyenv
+else
+  echo "✓ pyenv (インストール済み)"
+fi
+
 # --- oh-my-zsh インストール ---
 # RUNZSH=no: インストール後にzshを起動しない
 # CHSH=no: デフォルトシェル変更は上記で行うためスキップ
