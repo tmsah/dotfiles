@@ -153,6 +153,8 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 [[ -d "$HOME/.nodebrew" ]] && export PATH=$HOME/.nodebrew/current/bin:$PATH
 
 # pyenv（Pythonバージョン管理）
+# 前回の rehash がクラッシュして残ったロックファイルを起動時に除去
+[[ -f "${PYENV_ROOT:-$HOME/.pyenv}/shims/.pyenv-shim" ]] && rm -f "${PYENV_ROOT:-$HOME/.pyenv}/shims/.pyenv-shim"
 command -v pyenv &>/dev/null && eval "$(pyenv init -)"
 
 # direnv設定（ディレクトリごとの環境変数管理）
