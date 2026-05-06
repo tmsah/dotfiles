@@ -7,7 +7,7 @@
         <key>ProgramArguments</key>
         <array>
             <string>/usr/bin/ssh-add</string>
-            <string>/Users/*****/.ssh/*****.pem</string>
+            <string>{{SSH_KEY_PATH}}</string>
         </array>
         <key>RunAtLoad</key>
         <true/>

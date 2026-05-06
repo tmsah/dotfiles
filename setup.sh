@@ -4,8 +4,9 @@
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 source "$REPO_DIR/scripts/lib.sh"
+source "$REPO_DIR/scripts/wizard.sh"
 
-echo "=== セットアップ開始: $REPO_DIR ==="
+echo -e "\n=== セットアップ開始: $REPO_DIR ==="
 
 source "$REPO_DIR/scripts/install.sh"
 source "$REPO_DIR/scripts/link.sh"

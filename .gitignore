@@ -1,1 +1,5 @@
 backup/
+
+# 個人情報を含むファイル（テンプレートから生成・コミット不要）
+home/.gitconfig
+home/Library/LaunchAgents/com.user.ssh-add.plist

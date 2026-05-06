@@ -34,38 +34,14 @@ dotfiles/
 git clone git@github.com:tmsah/dotfiles.git ~/dotfiles
 ```
 
-### 2. 個人情報を含むファイルを編集
-
-以下のファイルは個人情報を含むため、リポジトリ管理外（コミット不要）。  
-クローン後に自分の情報を書き換えること。
-
-**`home/.gitconfig`**
-
-```bash
-vim ~/dotfiles/home/.gitconfig
-```
-
-```ini
-[user]
-    name = your-name       # ← 変更
-    email = your@mail.com  # ← 変更
-```
-
-**`home/Library/LaunchAgents/com.user.ssh-add.plist`**（macOS）
-
-```bash
-vim ~/dotfiles/home/Library/LaunchAgents/com.user.ssh-add.plist
-```
-
-```xml
-<string>/Users/your-username/.ssh/your-key.pem</string>  <!-- ← 変更 -->
-```
-
-### 3. setup.sh を実行
+### 2. setup.sh を実行
 
 ```bash
 ~/dotfiles/setup.sh
 ```
+
+実行すると最初にウィザードが起動し、git の名前・メールアドレス・SSH キーパスを対話入力で設定する。  
+既にファイルが存在する場合はスキップされるため、再実行しても上書きされない。
 
 以下が自動で行われる。
 

@@ -11,8 +11,6 @@ fi
 
 # --- LaunchAgents ---
 echo -e "\n[LaunchAgents]"
-link Library/LaunchAgents/com.user.ssh-add.plist \
-     "$HOME/Library/LaunchAgents/com.user.ssh-add.plist"
 PLIST_LABEL="com.user.ssh-add"
 if launchctl list | grep -q "$PLIST_LABEL" 2>/dev/null; then
   echo "✓ $PLIST_LABEL (読み込み済み)"
