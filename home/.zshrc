@@ -149,22 +149,44 @@ setopt hist_reduce_blanks
 # 補完で小文字でも大文字にマッチさせる
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
-# dotfiles の自動更新 (バックグラウンド実行、起動速度に影響しない)
+# dotfiles の自動更新（3秒タイムアウト、同期実行でプロンプト前に結果を表示）
 _dotfiles_update() {
+  setopt LOCAL_OPTIONS NO_MONITOR  # バックグラウンドジョブのプロセスログを抑制
   local dir="$HOME/dotfiles"
   [[ -d "$dir/.git" ]] || return
   local before
   before=$(git -C "$dir" rev-parse HEAD 2>/dev/null)
-  if git -C "$dir" pull --quiet --ff-only 2>/dev/null; then
-    local after
-    after=$(git -C "$dir" rev-parse HEAD 2>/dev/null)
-    if [[ "$before" != "$after" ]]; then
-      echo "dotfiles: 更新しました ✓"
-    else
-      echo "dotfiles: 最新です ✓"
-    fi
-  else
+
+  # タイムアウト判定用フラグファイル
+  local timeout_flag="${TMPDIR:-/tmp}/.dotfiles_timeout_${USER}"
+  rm -f "$timeout_flag"
+
+  git -C "$dir" pull --quiet --ff-only 2>/dev/null &
+  local git_pid=$!
+  { sleep 3 && touch "$timeout_flag" && kill "$git_pid" 2>/dev/null; } &>/dev/null &
+  local timer_pid=$!
+  wait "$git_pid" 2>/dev/null
+  local code=$?
+  kill "$timer_pid" 2>/dev/null
+  wait "$timer_pid" 2>/dev/null
+
+  if [[ -f "$timeout_flag" ]]; then
+    rm -f "$timeout_flag"
+    echo "dotfiles: タイムアウト"
+    return
+  fi
+
+  if (( code != 0 )); then
     echo "dotfiles: pull 失敗 (オフラインまたはコンフリクトの可能性があります)"
+    return
+  fi
+
+  local after
+  after=$(git -C "$dir" rev-parse HEAD 2>/dev/null)
+  if [[ "$before" != "$after" ]]; then
+    echo "dotfiles: 更新しました ✓"
+  else
+    echo "dotfiles: 最新です ✓"
   fi
 }
-_dotfiles_update &!
+_dotfiles_update
