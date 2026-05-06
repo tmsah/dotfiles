@@ -1,7 +1,7 @@
 # dotfiles
 
 個人の環境設定ファイル管理リポジトリ。  
-`setup.sh` を実行するだけで全設定がシンボリックリンクで配置される。
+`setup.sh` を実行するだけで全設定が配置される。
 
 ## 構成
 
@@ -53,7 +53,7 @@ vim ~/dotfiles/home/.gitconfig
 
 - zsh / vim / oh-my-zsh のインストール（未インストールの場合）
 - oh-my-zsh プラグイン（zsh-syntax-highlighting, zsh-completions）のインストール
-- `home/` 以下の設定ファイルを対応するパスにシンボリックリンクで配置
+- `home/` 以下の設定ファイルを対応するパスに配置（後述）
 - デフォルトシェルを zsh に変更
 - LaunchAgents の読み込み（macOS）
 - iTerm2 設定の復元（macOS）
@@ -63,6 +63,30 @@ vim ~/dotfiles/home/.gitconfig
 
 **既存ファイルがある場合**は上書き前に `backup/<timestamp>/` へ自動バックアップされる。  
 すでに正しく配置済みのファイルはスキップされる。
+
+## ファイルの配置方法
+
+ファイルの種類によって配置方法が異なる。
+
+| 種類 | 対象ファイル | 配置方法 |
+|------|-------------|----------|
+| シェルRC | `.zshrc` `.bash_profile` `.bashrc` | 実ファイルを生成して `source` |
+| その他設定 | `.gitconfig` `.vimrc` `.claude/` `.vscode/` など | シンボリックリンク |
+| コピー | `com.googlecode.iterm2.plist` | ファイルコピー |
+
+### シェルRC ファイルについて
+
+`.zshrc` などは `uv` や `nvm` などのインストーラーが自動的に行を追記することがある。  
+シンボリックリンクだとその追記がリポジトリに混入してしまうため、  
+`setup.sh` は dotfiles の共通設定を `source` するだけの**実ファイル**を生成する。
+
+```
+~/.zshrc  （実ファイル・リポジトリ管理外）
+  └─ source ~/dotfiles/home/.zshrc  ← 共通設定
+     # インストーラーによる追記はここに溜まる（リポジトリを汚さない）
+```
+
+マシン固有の設定もこの実ファイルの末尾に直接追記すればよい。
 
 ## 日常の使い方
 

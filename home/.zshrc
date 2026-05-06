@@ -1,9 +1,6 @@
 # bashから移行する場合は$PATHを変更する必要があるかもしれません
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-# Nodebrew経由のnpm
-export PATH=$HOME/.nodebrew/current/bin:$PATH
-
 # oh-my-zshのインストールパス
 export ZSH=$HOME/.oh-my-zsh
 
@@ -152,9 +149,6 @@ setopt hist_reduce_blanks
 # 補完で小文字でも大文字にマッチさせる
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
-# 追加の設定ファイルを実行
-. "$HOME/.local/bin/env"
-
 # dotfiles の自動更新 (バックグラウンド実行、起動速度に影響しない)
 _dotfiles_update() {
   local dir="$HOME/dotfiles"
@@ -174,7 +168,3 @@ _dotfiles_update() {
   fi
 }
 _dotfiles_update &!
-
-# dotfiles の自動更新 (バックグラウンド実行、起動速度に影響しない)
-# --ff-only: ローカルに変更があっても失敗するだけでマージしない
-(git -C "$HOME/dotfiles" pull --quiet --ff-only 2>/dev/null) &!

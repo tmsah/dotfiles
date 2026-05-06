@@ -57,6 +57,20 @@ link() {
   ln -sfn "$src" "$dst" && echo "✓ $dst" || echo "✗ $dst (失敗)"
 }
 
+# 実ファイル生成ヘルパー: dotfilesをsourceする実ファイルを作成
+# インストーラーによる追記はこの実ファイルに溜まり、リポジトリを汚さない
+source_file() {
+  local src="$HOME_DIR/$1" dst="$2"
+  mkdir -p "$(dirname "$dst")"
+  # すでにsource行があればスキップ（インストーラーによる追記を保護）
+  if [[ -f "$dst" ]] && grep -qF "source \"$src\"" "$dst" 2>/dev/null; then
+    echo "✓ $dst"; return
+  fi
+  _backup "$dst"
+  printf '# dotfiles共通設定を読み込む（このファイルはリポジトリ管理外）\n# マシン固有の設定・インストーラーによる追記はこのファイルの末尾に溜まります\nsource "%s"\n' "$src" > "$dst" \
+    && echo "✓ $dst" || echo "✗ $dst (失敗)"
+}
+
 # ファイルコピーヘルパー (plistなどシンボリックリンク不可のファイル用)
 copy_file() {
   local src="$HOME_DIR/$1" dst="$2"
@@ -104,9 +118,9 @@ fi
 
 # --- dotfiles ---
 echo -e "\n[dotfiles]"
-link .zshrc            "$HOME/.zshrc"
-link .bash_profile     "$HOME/.bash_profile"
-link .bashrc           "$HOME/.bashrc"
+source_file .zshrc        "$HOME/.zshrc"
+source_file .bash_profile "$HOME/.bash_profile"
+source_file .bashrc       "$HOME/.bashrc"
 link .gitconfig        "$HOME/.gitconfig"
 link .gitignore_global "$HOME/.gitignore_global"
 link .vimrc            "$HOME/.vimrc"
