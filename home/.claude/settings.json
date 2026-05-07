@@ -17,9 +17,6 @@
     ],
     "ask": [
       "Bash(rm:*)",
-      "Bash(git push --force:*)",
-      "Bash(git push -f:*)",
-      "Bash(git reset --hard:*)",
       "Bash(git clean:*)",
       "Bash(git branch -D:*)",
       "Bash(git rebase:*)",
@@ -32,6 +29,11 @@
       "mcp__claude_ai_Gmail__delete*",
       "mcp__claude_ai_Google_Calendar__delete*",
       "mcp__claude_ai_Google_Drive__delete*"
+    ],
+    "deny": [
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git reset --hard:*)"
     ]
   },
   "feedbackSurveyState": {
