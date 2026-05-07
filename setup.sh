@@ -14,4 +14,10 @@ source "$REPO_DIR/scripts/link.sh"
 [[ "$OS" == "Darwin" ]] && source "$REPO_DIR/scripts/macos.sh"
 
 echo -e "\n=== セットアップ完了 ==="
-echo "  ※ シェルを再起動して設定を反映してください: exec zsh"
+echo ""
+read -rp "設定を反映するためにシェルを再起動しますか？ (exec zsh) [y/N]: " _reply
+if [[ "$_reply" =~ ^[Yy]$ ]]; then
+  exec zsh
+else
+  echo "  ※ 後で手動で実行してください: exec zsh"
+fi
