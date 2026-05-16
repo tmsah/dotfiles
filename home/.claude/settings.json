@@ -13,7 +13,8 @@
       "mcp__claude_ai_Atlassian_Rovo",
       "mcp__claude_ai_Gmail",
       "mcp__claude_ai_Google_Calendar",
-      "mcp__claude_ai_Google_Drive"
+      "mcp__claude_ai_Google_Drive",
+      "mcp__aws*"
     ],
     "ask": [
       "Bash(rm:*)",
@@ -28,7 +29,8 @@
       "mcp__claude_ai_Atlassian_Rovo__delete*",
       "mcp__claude_ai_Gmail__delete*",
       "mcp__claude_ai_Google_Calendar__delete*",
-      "mcp__claude_ai_Google_Drive__delete*"
+      "mcp__claude_ai_Google_Drive__delete*",
+      "mcp__aws*__delete*"
     ],
     "deny": [
       "Bash(git push --force:*)",
