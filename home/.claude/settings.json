@@ -2,35 +2,35 @@
   "permissions": {
     "allow": [
       "Bash",
-      "Read",
       "Edit",
-      "Write",
-      "WebFetch",
-      "WebSearch",
       "Glob",
       "Grep",
       "mcp__atlassian",
+      "mcp__aws*",
       "mcp__claude_ai_Atlassian_Rovo",
       "mcp__claude_ai_Gmail",
       "mcp__claude_ai_Google_Calendar",
       "mcp__claude_ai_Google_Drive",
-      "mcp__aws*"
+      "Read",
+      "WebFetch",
+      "WebSearch",
+      "Write"
     ],
     "ask": [
-      "Bash(rm:*)",
-      "Bash(git clean:*)",
+      "Bash(dd:*)",
       "Bash(git branch -D:*)",
+      "Bash(git clean:*)",
       "Bash(git rebase:*)",
       "Bash(kill:*)",
       "Bash(killall:*)",
       "Bash(pkill:*)",
-      "Bash(dd:*)",
+      "Bash(rm:*)",
       "mcp__atlassian__delete*",
+      "mcp__aws*__delete*",
       "mcp__claude_ai_Atlassian_Rovo__delete*",
       "mcp__claude_ai_Gmail__delete*",
       "mcp__claude_ai_Google_Calendar__delete*",
-      "mcp__claude_ai_Google_Drive__delete*",
-      "mcp__aws*__delete*"
+      "mcp__claude_ai_Google_Drive__delete*"
     ],
     "deny": [
       "Bash(git push --force:*)",
