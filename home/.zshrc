@@ -103,6 +103,7 @@ alias dcu='docker compose up -d'
 alias dcd='docker compose down'
 alias dp='docker ps'
 alias dim='docker images'
+alias dotfiles-update='_dotfiles_update'
 
 # 文字コードの指定
 export LANG=ja_JP.UTF-8
@@ -200,5 +201,4 @@ _dotfiles_update() {
     echo "dotfiles: 最新です ✓"
   fi
 }
-alias dotfiles-update='_dotfiles_update'
 _dotfiles_update
