@@ -27,7 +27,7 @@ ZSH_THEME="main"
 # DISABLE_AUTO_UPDATE="true"
 
 # プロンプトなしで自動更新する
-# DISABLE_UPDATE_PROMPT="true"
+DISABLE_UPDATE_PROMPT="true"
 
 # 自動更新の頻度を変更する
 # export UPDATE_ZSH_DAYS=13
@@ -96,14 +96,13 @@ export LSCOLORS=GxfxcxdxbxegedabagGxGx
 # エイリアスの例
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias l='ls'
-alias tf='terraform'
-
-alias dcu='docker compose up -d'
 alias dcd='docker compose down'
-alias dp='docker ps'
+alias dcu='docker compose up -d'
 alias dim='docker images'
 alias dotfiles-update='_dotfiles_update'
+alias dp='docker ps'
+alias l='ls'
+alias tf='terraform'
 
 # 文字コードの指定
 export LANG=ja_JP.UTF-8
