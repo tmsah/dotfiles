@@ -200,4 +200,5 @@ _dotfiles_update() {
     echo "dotfiles: 最新です ✓"
   fi
 }
+alias dotfiles-update='_dotfiles_update'
 _dotfiles_update
