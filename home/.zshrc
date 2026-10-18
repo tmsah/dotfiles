@@ -96,9 +96,7 @@ export LSCOLORS=GxfxcxdxbxegedabagGxGx
 # エイリアスの例
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias dim='docker images'
 alias dotfiles-update='_dotfiles_update'
-alias dp='docker ps'
 alias l='ls'
 alias tf='terraform'
 

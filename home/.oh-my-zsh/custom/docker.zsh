@@ -1,4 +1,7 @@
-# Docker Compose 用のショートカット（Docker Desktop の自動起動・終了付き）
+# Docker 用のエイリアス・関数
+
+alias dim='docker images'
+alias dp='docker ps'
 
 # Docker Desktop が停止中なら起動し、使える状態になるまで待つ
 _docker_ensure_running() {
