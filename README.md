@@ -12,6 +12,7 @@ dotfiles/
 │   ├── lib.sh            # 共通変数・ヘルパー関数
 │   ├── install.sh        # ツール類のインストール
 │   ├── link.sh           # dotfiles配置（symlink/source_file）
+│   ├── update.sh         # シェル起動時の自動更新（pull・未配置ファイルの配置）
 │   └── macos.sh          # macOS専用（nodebrew・LaunchAgents・iTerm2）
 ├── backup/               # 既存ファイルのバックアップ（git管理外）
 └── home/                 # ~/に配置されるファイル群

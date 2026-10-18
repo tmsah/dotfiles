@@ -158,44 +158,9 @@ command -v pyenv &>/dev/null && eval "$(pyenv init -)"
 # direnv設定（ディレクトリごとの環境変数管理）
 eval "$(direnv hook zsh)"
 
-# dotfiles の自動更新（3秒タイムアウト、同期実行でプロンプト前に結果を表示）
+# dotfiles の自動更新と、新しく必要になった設定ファイルの配置（処理は scripts/update.sh）
 _dotfiles_update() {
-  setopt LOCAL_OPTIONS NO_MONITOR  # バックグラウンドジョブのプロセスログを抑制
-  local dir="$HOME/dotfiles"
-  [[ -d "$dir/.git" ]] || return
-  local before
-  before=$(git -C "$dir" rev-parse HEAD 2>/dev/null)
-
-  # タイムアウト判定用フラグファイル
-  local timeout_flag="${TMPDIR:-/tmp}/.dotfiles_timeout_${USER}"
-  rm -f "$timeout_flag"
-
-  git -C "$dir" pull --quiet --ff-only 2>/dev/null &
-  local git_pid=$!
-  { sleep 3 && touch "$timeout_flag" && kill "$git_pid" 2>/dev/null; } &>/dev/null &
-  local timer_pid=$!
-  wait "$git_pid" 2>/dev/null
-  local code=$?
-  kill "$timer_pid" 2>/dev/null
-  wait "$timer_pid" 2>/dev/null
-
-  if [[ -f "$timeout_flag" ]]; then
-    rm -f "$timeout_flag"
-    echo "dotfiles: タイムアウト"
-    return
-  fi
-
-  if (( code != 0 )); then
-    echo "dotfiles: pull 失敗 (オフラインまたはコンフリクトの可能性があります)"
-    return
-  fi
-
-  local after
-  after=$(git -C "$dir" rev-parse HEAD 2>/dev/null)
-  if [[ "$before" != "$after" ]]; then
-    echo "dotfiles: 更新しました ✓"
-  else
-    echo "dotfiles: 最新です ✓"
-  fi
+  [[ -f "$HOME/dotfiles/scripts/update.sh" ]] || return
+  bash "$HOME/dotfiles/scripts/update.sh"
 }
 _dotfiles_update

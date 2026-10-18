@@ -41,11 +41,16 @@ _backup() {
   fi
 }
 
+# 配置済みのときの表示（QUIET_UNCHANGED が設定されていれば表示しない）
+_already() {
+  [[ -n "$QUIET_UNCHANGED" ]] || echo "✓ $1"
+}
+
 link() {
   local src="$HOME_DIR/$1" dst="$2"
   mkdir -p "$(dirname "$dst")"
   if [[ "$(readlink "$dst" 2>/dev/null)" == "$src" ]]; then
-    echo "✓ $dst"; return
+    _already "$dst"; return
   fi
   _backup "$dst"
   ln -sfn "$src" "$dst" && echo "✓ $dst" || echo "✗ $dst (失敗)"
@@ -57,7 +62,7 @@ source_file() {
   local src="$HOME_DIR/$1" dst="$2"
   mkdir -p "$(dirname "$dst")"
   if [[ -f "$dst" ]] && grep -qF "source \"$src\"" "$dst" 2>/dev/null; then
-    echo "✓ $dst"; return
+    _already "$dst"; return
   fi
   _backup "$dst"
   printf '# dotfiles共通設定を読み込む（このファイルはリポジトリ管理外）\n# マシン固有の設定・インストーラーによる追記はこのファイルの末尾に溜まります\nsource "%s"\n' "$src" > "$dst" \
@@ -68,7 +73,7 @@ copy_file() {
   local src="$HOME_DIR/$1" dst="$2"
   mkdir -p "$(dirname "$dst")"
   if cmp -s "$src" "$dst" 2>/dev/null; then
-    echo "✓ $dst"; return
+    _already "$dst"; return
   fi
   _backup "$dst"
   cp "$src" "$dst" && echo "✓ $dst" || echo "✗ $dst (失敗)"
