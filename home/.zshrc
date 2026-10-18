@@ -96,8 +96,6 @@ export LSCOLORS=GxfxcxdxbxegedabagGxGx
 # エイリアスの例
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias dcd='docker compose down'
-alias dcu='docker compose up -d'
 alias dim='docker images'
 alias dotfiles-update='_dotfiles_update'
 alias dp='docker ps'

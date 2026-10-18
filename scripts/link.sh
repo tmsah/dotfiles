@@ -11,10 +11,12 @@ link .vimrc               "$HOME/.vimrc"
 link .local/gitconfig     "$HOME/.local/gitconfig"
 link .local/ssh_key       "$HOME/.local/ssh_key"
 
-# --- oh-my-zsh テーマ ---
-echo -e "\n[oh-my-zsh テーマ]"
+# --- oh-my-zsh テーマ・カスタム設定 ---
+echo -e "\n[oh-my-zsh テーマ・カスタム設定]"
 link .oh-my-zsh/custom/themes/main.zsh-theme \
      "$HOME/.oh-my-zsh/custom/themes/main.zsh-theme"
+link .oh-my-zsh/custom/docker.zsh \
+     "$HOME/.oh-my-zsh/custom/docker.zsh"
 
 # --- Claude 設定 ---
 echo -e "\n[Claude]"
